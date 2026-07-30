@@ -10,6 +10,7 @@ class User(models.Model):
         "Имя пользователя", max_length=50, unique=True, db_index=True
     )
     password: models.CharField = models.CharField("Пароль пользователя", max_length=128)
+    clicks: models.IntegerField = models.IntegerField("Кол-во кликов", default=0)
 
 
 class Color(models.Model):

@@ -8,8 +8,8 @@ from main_app.models import User, Color
 class UserToAdmin(admin.ModelAdmin):
     """Модель пользователя для админки"""
     model = User
-    list_display = ["name", "get_colors"]
-    list_filter = ["name"]
+    list_display = ["name", "clicks", "get_colors"]
+    list_filter = ["name", "clicks"]
     search_fields = ["name"]
 
     def get_colors(self, obj):

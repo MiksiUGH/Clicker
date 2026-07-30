@@ -22,7 +22,7 @@ from main_app.views import login, logout, register, buy_clicker_color, add_click
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("/", index, name="index"),
+    path("", index, name="index"),
     path("register/", register, name="register"),
     path("login/", login, name="login"),
     path("logout/", logout, name="logout"),

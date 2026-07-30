@@ -7,28 +7,26 @@ from main_app.models import User, Color
 
 class UserToAdmin(admin.ModelAdmin):
     """Модель пользователя для админки"""
-
+    model = User
     list_display = ["name", "get_colors"]
-    list_filter = ["name", "get_colors"]
+    list_filter = ["name"]
     search_fields = ["name"]
 
-    class Meta:
-        """Настройки модели для админки"""
+    def get_colors(self, obj):
+        """Получение всех цветов"""
+        colors = obj.colors.all()
+        return ", ".join(color.name for color in colors)
 
-        model = User
+    get_colors.short_description = "Цвета"
 
 
 class ColorToAdmin(admin.ModelAdmin):
     """Модель цвета для админки"""
 
+    model = Color
     list_display = ["name"]
     list_filter = ["name"]
     search_fields = ["name"]
-
-    class Meta:
-        """Настройки модели для админки"""
-
-        model = Color
 
 
 admin.site.register(User, UserToAdmin)

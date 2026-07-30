@@ -11,19 +11,6 @@ class User(models.Model):
     )
     password: models.CharField = models.CharField("Пароль пользователя", max_length=128)
 
-    def get_colors(self) -> str:
-        """Получение всех цветов(для админки)
-
-        :return: _description_
-        :rtype: str
-        """
-        colors = self.colors.all()
-        res: list[str] = []
-        for color in colors:
-            res.append(color.name)
-
-        return ", ".join(res)
-
 
 class Color(models.Model):
     """Цвет кликера"""

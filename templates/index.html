@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django Clicker</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Подключаем внешний CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light px-4">
+        <a class="navbar-brand fw-bold" href="/">CLICKER</a>
+        <div class="ms-auto">
+            {% if user.is_authenticated %}
+                <span class="me-3 fw-bold">Привет, {{ user.name }}!</span>
+                <a href="{% url 'logout' %}" class="btn btn-outline-dark btn-sm">Выход</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-dark btn-sm me-2">Вход</a>
+                <a href="{% url 'register' %}" class="btn btn-dark btn-sm">Регистрация</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container d-flex justify-content-center align-items-start vh-100 pt-5">
+        <div class="row g-4 justify-content-center w-100" style="max-width: 700px;">
+            
+            <!-- Блок Кликера -->
+            <div class="col-12">
+                <div class="card clicker-card text-center p-4 shadow-sm bg-white mx-auto" id="main-card">
+                    <h3 class="fw-normal mb-0">Amount:</h3>
+                    <!-- Сюда Django должен вставить начальное количество кликов -->
+                    <h1 class="display-4 fw-bold my-3" id="counter-display">0</h1>
+                    
+                    <div class="d-flex gap-2 mb-3">
+                        <button class="btn btn-dark-custom btn-lg fw-bold text-uppercase flex-grow-1" id="btn-click">CLICK</button>
+                        <button class="btn btn-dark-custom btn-lg fw-bold text-uppercase flex-grow-1" id="btn-save">SAVE</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Блок Магазина цветов -->
+            <div class="col-12">
+                <div class="card p-3 shadow-sm border-0">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="m-0 fw-bold">🎨 Магазин цветов</h5>
+                        <!-- Активный цвет -->
+                        <div>
+                            <select class="form-select form-select-sm" id="active-color-select">
+                                <option value="" disabled selected>Выберите цвет</option>
+                                <!-- Django должен вывести купленные цвета: <option value="red">Красный</option> -->
+                                {% for color in user_colors %}
+                                    <option value="{{ color.name }}">{{ color.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-2" id="color-shop-list">
+                        <!-- Список всех цветов для покупки (захардкожен в качестве примера) -->
+                        <!-- Django может вывести их циклом, либо мы пропишем их в JS -->
+                        <div class="col-6 col-md-4">
+                            <div class="border rounded p-2 text-center d-flex flex-column align-items-center bg-light">
+                                <div class="color-sample" style="background-color: #ff4444; width: 30px; height: 30px; border-radius: 50%;"></div>
+                                <small class="mt-1">Красный</small>
+                                <small class="text-muted">50 кликов</small>
+                                <button class="btn btn-dark btn-sm w-100 mt-1 buy-color-btn" data-color="Красный" data-cost="50">Купить</button>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="border rounded p-2 text-center d-flex flex-column align-items-center bg-light">
+                                <div class="color-sample" style="background-color: #4444ff; width: 30px; height: 30px; border-radius: 50%;"></div>
+                                <small class="mt-1">Синий</small>
+                                <small class="text-muted">100 кликов</small>
+                                <button class="btn btn-dark btn-sm w-100 mt-1 buy-color-btn" data-color="Синий" data-cost="100">Купить</button>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <div class="border rounded p-2 text-center d-flex flex-column align-items-center bg-light">
+                                <div class="color-sample" style="background-color: #44ff44; width: 30px; height: 30px; border-radius: 50%;"></div>
+                                <small class="mt-1">Зелёный</small>
+                                <small class="text-muted">150 кликов</small>
+                                <button class="btn btn-dark btn-sm w-100 mt-1 buy-color-btn" data-color="Зелёный" data-cost="150">Купить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Скрытый блок для передачи начальных данных из Django в JS -->
+    <!-- Если пользователь авторизован, Django сюда вставляет JSON с количеством кликов и купленными цветами -->
+    <script id="initial-user-data" type="application/json">
+        {
+            "clicks": {{ user.clicks|default:0 }},
+            "colors": [
+                {% for color in user_colors %}
+                    "{{ color.name }}"{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ]
+        }
+    </script>
+
+    <!-- Подключаем внешний JS -->
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

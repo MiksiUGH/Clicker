@@ -18,14 +18,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from main_app.views import login, logout, register, buy_clicker_color, add_click, index
+from main_app.views import (
+    login_user,
+    logout_user,
+    register_user,
+    buy_clicker_color,
+    add_click,
+    index,
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", index, name="index"),
-    path("register/", register, name="register"),
-    path("login/", login, name="login"),
-    path("logout/", logout, name="logout"),
-    path("buy_color/", buy_clicker_color, name="buy_clicker_color"),
+    path("register/", register_user, name="register"),
+    path("login/", login_user, name="login"),
+    path("logout/", logout_user, name="logout"),
+    path("buy_color/", buy_clicker_color, name="buy_color"),
     path("add_click/", add_click, name="add_click"),
 ]
